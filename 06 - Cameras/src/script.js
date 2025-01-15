@@ -1,6 +1,5 @@
 import * as THREE from 'three'
-
-
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 /**
  * Base
@@ -36,12 +35,13 @@ scene.add(mesh)
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-// const aspectRatio = sizes.width / sizes.height
-// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100);
-
-camera.lookAt(mesh.position)
+camera.position.z = 3;
 scene.add(camera)
 
+
+// Controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true;
 // Renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
@@ -54,15 +54,7 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
-
-    // Update camera
-    console.log(cursor.x, cursor.x * Math.PI * 2, Math.sin(cursor.x * Math.PI * 2))
-    camera.position.x = Math.sin(cursor.x * Math.PI * 2)*3;
-    camera.position.z = Math.cos(cursor.x * Math.PI * 2)*3;
-    camera.position.y = cursor.y * 5;
-
-    camera.lookAt(mesh.position)
-
+    controls.update(); // For Damping to work we have to apply controls on each frame
     // Render
     renderer.render(scene, camera)
 
