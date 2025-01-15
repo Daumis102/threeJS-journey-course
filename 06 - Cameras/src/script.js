@@ -54,7 +54,7 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
-    controls.update(); // For Damping to work we have to apply controls on each frame
+    controls.update(); // For Damping to work we have to apply
     // Render
     renderer.render(scene, camera)
 
