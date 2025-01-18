@@ -1,5 +1,67 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {load} from "three/addons/libs/opentype.module.js";
+
+
+/**
+ * Textures
+ * */
+
+// ---- Long way of creating textures
+// const image = new Image();
+// const texture = new THREE.Texture(image);
+// texture.colorSpace = THREE.SRGBColorSpace;
+//
+// image.onload = () => {
+//     texture.needsUpdate = true;
+// }
+// image.src = '/textures/door/color.jpg';
+
+// Simpler way:
+
+const loadingManager = new THREE.LoadingManager();    // << optional, but allows tracking progress of all resources loading statuses at once
+loadingManager.onStart = (e) =>
+{
+    console.log('loading started')
+}
+loadingManager.onLoad = (e) =>
+{
+    console.log('loading finished')
+}
+loadingManager.onProgress = (e) =>
+{
+    console.log('loading progressing')
+}
+loadingManager.onError = (e) =>
+{
+    console.log('loading error')
+}
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+
+
+
+const colorTexture = textureLoader.load('./textures/door/color.jpg')
+colorTexture.colorSpace = THREE.SRGBColorSpace;
+
+// We can reuse the same loader for loading multiple textures
+const alphaTexture = textureLoader.load('./textures/door/alpha.jpg')
+alphaTexture.colorSpace = THREE.SRGBColorSpace;
+
+const heightTexture = textureLoader.load('./textures/door/height.jpg')
+heightTexture.colorSpace = THREE.SRGBColorSpace;
+const normalTexture = textureLoader.load('./textures/door/normal.jpg')
+normalTexture.colorSpace = THREE.SRGBColorSpace;
+const ambientOcclusionTexture = textureLoader.load('./textures/door/ambientOcclusion.jpg')
+ambientOcclusionTexture.colorSpace = THREE.SRGBColorSpace;
+const metalnessTexture = textureLoader.load('./textures/door/metalness.jpg')
+metalnessTexture.colorSpace = THREE.SRGBColorSpace;
+const roughnessTexture = textureLoader.load('./textures/door/roughness.jpg')
+roughnessTexture.colorSpace = THREE.SRGBColorSpace;
+
+colorTexture.wrapS = THREE.RepeatWrapping
+colorTexture.wrapT = THREE.RepeatWrapping
+
 
 /**
  * Base
@@ -13,10 +75,10 @@ const scene = new THREE.Scene()
 /**
  * Object
  */
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-const mesh = new THREE.Mesh(geometry, material)
-scene.add(mesh)
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ map: colorTexture });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
 
 /**
  * Sizes
