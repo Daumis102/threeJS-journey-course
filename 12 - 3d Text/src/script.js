@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import {FontLoader, TextGeometry} from "three/addons";
+import {AxesHelper} from "three";
 
 /**
  * Base
@@ -14,22 +16,42 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+const axesHelper = new THREE.AxesHelper()
+scene.add(axesHelper)
+
 /**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+matcapTexture.colorSpace = THREE.SRGBColorSpace;
 
+/*
+* Fonts
+*/
 
+const fontLoader = new FontLoader();
+fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
+    const textGeometry = new TextGeometry('My coold text', {
+        font,
+        size: 0.5,
+        depth: 0.2,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.03,
+        bevelSize: 0.02,
+        bevelOffset: 0,
+        bevelSegments: 5
+    })
 
-/**
- * Object
- */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial()
-)
+    // Center text within the mesh
+    textGeometry.computeBoundingBox()
+    textGeometry.translate(- textGeometry.boundingBox.max.x * 0.5, - textGeometry.boundingBox.max.y * 0.5, - textGeometry.boundingBox.max.z * 0.5);
 
-scene.add(cube)
+    const textMaterial = new THREE.MeshMatcapMaterial({matcap: matcapTexture})
+    const text = new THREE.Mesh(textGeometry, textMaterial)
+    scene.add(text);
+})
 
 /**
  * Sizes
