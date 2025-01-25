@@ -43,7 +43,24 @@ directionalLight.shadow.camera.near = 1
 scene.add(directionalLight)
 
 const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+directionalLightCameraHelper.visible = true;
 scene.add(directionalLightCameraHelper);
+
+// SpotLight
+const spotLight = new THREE.SpotLight('white', 10, 5)
+spotLight.position.set(-2, 2, - 1);
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+spotLight.shadow.camera.far = 5
+spotLight.shadow.camera.near = 1
+
+scene.add(spotLight)
+
+const spotLightCameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
+spotLightCameraHelper.visible = true;
+scene.add(spotLightCameraHelper);
+
 
 /**
  * Materials
