@@ -44,7 +44,7 @@ directionalLight.shadow.camera.near = 1
 scene.add(directionalLight)
 
 const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-directionalLightCameraHelper.visible = true;
+directionalLightCameraHelper.visible = false;
 scene.add(directionalLightCameraHelper);
 
 // SpotLight
@@ -75,6 +75,11 @@ const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
 pointLightCameraHelper.visible = false;
 scene.add(pointLightCameraHelper);
 
+/*
+* Textures
+* */
+const shadowTexture = new THREE.TextureLoader().load("/textures/bakedShadow.jpg");
+shadowTexture.colorSpace = THREE.SRGBColorSpace
 /**
  * Materials
  */
@@ -94,11 +99,12 @@ sphere.castShadow = true;
 
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(5, 5),
-    material
+    new THREE.MeshBasicMaterial({map: shadowTexture})
 )
 plane.rotation.x = - Math.PI * 0.5
 plane.position.y = - 0.5
-plane.receiveShadow = true;
+plane.receiveShadow = false;
+
 
 scene.add(sphere, plane)
 
@@ -147,8 +153,7 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.VSMShadowMap
+renderer.shadowMap.enabled = false
 /**
  * Animate
  */
