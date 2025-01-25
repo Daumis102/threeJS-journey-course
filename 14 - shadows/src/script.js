@@ -39,6 +39,7 @@ directionalLight.shadow.camera.right = 2
 
 directionalLight.shadow.camera.far = 6
 directionalLight.shadow.camera.near = 1
+directionalLight.shadow.radius = 4
 
 scene.add(directionalLight)
 
@@ -147,7 +148,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.shadowMap.enabled = true
-
+renderer.shadowMap.type = THREE.BasicShadowMap
 /**
  * Animate
  */
