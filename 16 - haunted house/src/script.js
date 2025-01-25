@@ -74,9 +74,9 @@ const bushColorTexture = textureLoader.load("bush/leaves_forest_ground/leaves_fo
 bushColorTexture.colorSpace = three.SRGBColorSpace
 const bushARMTexture = textureLoader.load("bush/leaves_forest_ground/leaves_forest_ground_arm_1k.jpg")
 const bushNormalTexture = textureLoader.load("bush/leaves_forest_ground/leaves_forest_ground_nor_gl_1k.jpg")
-bushColorTexture.repeat.set(2,1)
-bushARMTexture.repeat.set(2,1)
-bushNormalTexture.repeat.set(2,1)
+bushColorTexture.repeat.set(2, 1)
+bushARMTexture.repeat.set(2, 1)
+bushNormalTexture.repeat.set(2, 1)
 
 bushColorTexture.srapS = three.RepeatWrapping
 bushARMTexture.srapS = three.RepeatWrapping
@@ -168,7 +168,7 @@ const door = new three.Mesh(
         normalMap: doorNormalTexture,
         displacementMap: doorHeightTexture,
         displacementScale: 0.15,
-        displacementBias: - 0.04,
+        displacementBias: -0.04,
     })
 )
 door.position.y += 2.2 / 2
@@ -190,25 +190,25 @@ const bushMaterial = new three.MeshStandardMaterial({
 const bush1 = new three.Mesh(bushGeometry, bushMaterial)
 bush1.position.set(0.8, 0.2, 2.2)
 bush1.scale.set(0.5, 0.5, 0.5)
-bush1.rotation.x = - 0.75
+bush1.rotation.x = -0.75
 house.add(bush1)
 
 const bush2 = new three.Mesh(bushGeometry, bushMaterial)
 bush2.position.set(1.4, 0.1, 2.1)
 bush2.scale.set(0.25, 0.25, 0.25)
-bush2.rotation.x = - 0.75
+bush2.rotation.x = -0.75
 house.add(bush2)
 
 const bush3 = new three.Mesh(bushGeometry, bushMaterial)
 bush3.scale.set(0.4, 0.4, 0.4)
 bush3.position.set(-0.8, 0.1, 2.2)
-bush3.rotation.x = - 0.75
+bush3.rotation.x = -0.75
 house.add(bush3)
 
 const bush4 = new three.Mesh(bushGeometry, bushMaterial)
 bush4.scale.set(0.15, 0.15, 0.15)
 bush4.position.set(-1, 0.05, 2.6)
-bush4.rotation.x = - 0.75
+bush4.rotation.x = -0.75
 house.add(bush4)
 
 // graves
@@ -246,12 +246,12 @@ const ambientLight = new three.AmbientLight('#86cdff', 0.275)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new three.DirectionalLight('#86cdff', 1 )
+const directionalLight = new three.DirectionalLight('#86cdff', 1)
 directionalLight.position.set(3, 2, -8)
 scene.add(directionalLight)
 
 // Door light
-const doorLight = new three.PointLight('#ff7d46', 5 )
+const doorLight = new three.PointLight('#ff7d46', 5)
 doorLight.position.set(0, 2.2, 2.5)
 house.add(doorLight)
 
@@ -261,7 +261,7 @@ house.add(doorLight)
 const ghost1 = new three.PointLight('#8800ff', 6)
 const ghost2 = new three.PointLight('#ff0088', 6)
 const ghost3 = new three.PointLight('#ff0000', 6)
-scene.add(ghost1,ghost2,ghost3)
+scene.add(ghost1, ghost2, ghost3)
 /**
  * Sizes
  */
@@ -306,6 +306,34 @@ const renderer = new three.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+/*
+* Shadows
+* */
+
+// Renderer
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = three.PCFSoftShadowMap
+
+directionalLight.castShadow = true
+ghost1.castShadow = true
+ghost2.castShadow = true
+ghost3.castShadow = true
+// Don't need to set castShadows on door light because there is nowhere where it would cast shadows, so saving performance and nost casting any
+
+walls.castShadow = true
+walls.receiveShadow = true
+
+// bushes would produce very small shadows so we can skip them for performance reasons
+
+roof.castShadow = true;
+
+floor.receiveShadow = true;
+
+graves.children.forEach(child => {
+    child.castShadow = true;
+    child.receiveShadow = true;
+});
 
 /**
  * Animate
