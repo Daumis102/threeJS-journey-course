@@ -78,8 +78,10 @@ scene.add(pointLightCameraHelper);
 /*
 * Textures
 * */
-const shadowTexture = new THREE.TextureLoader().load("/textures/bakedShadow.jpg");
-shadowTexture.colorSpace = THREE.SRGBColorSpace
+const simpleShadow = new THREE.TextureLoader().load("/textures/simpleShadow.jpg");
+simpleShadow.colorSpace = THREE.SRGBColorSpace
+// const shadowTexture = new THREE.TextureLoader().load("/textures/bakedShadow.jpg");
+// shadowTexture.colorSpace = THREE.SRGBColorSpace
 /**
  * Materials
  */
@@ -99,14 +101,21 @@ sphere.castShadow = true;
 
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(5, 5),
-    new THREE.MeshBasicMaterial({map: shadowTexture})
+    material
 )
 plane.rotation.x = - Math.PI * 0.5
 plane.position.y = - 0.5
 plane.receiveShadow = false;
 
-
 scene.add(sphere, plane)
+
+const shadowPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.5, 1.5),
+    new THREE.MeshBasicMaterial({alphaMap: simpleShadow, color: 'black', transparent: true})
+)
+shadowPlane.rotation.x = - Math.PI * 0.5
+shadowPlane.position.y = plane.position.y + 0.01
+scene.add(shadowPlane)
 
 /**
  * Sizes
@@ -162,6 +171,16 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    // animate sphere
+    sphere.position.x = Math.cos(elapsedTime) * 1.5
+    sphere.position.z = Math.sin(elapsedTime) * 1.5
+    sphere.position.y = Math.abs(Math.sin(elapsedTime * 3))
+
+    shadowPlane.position.x = sphere.position.x
+    shadowPlane.position.z = sphere.position.z
+    shadowPlane.material.opacity = (1-sphere.position.y) * 0.3
+
 
     // Update controls
     controls.update()
