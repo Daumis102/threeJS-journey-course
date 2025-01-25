@@ -1,7 +1,7 @@
 import * as three from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
-import {Timer} from "three/addons";
+import {Sky, Timer} from "three/addons";
 
 /**
  * Base
@@ -356,6 +356,29 @@ ghost2.shadow.camera.far = 10
 ghost3.shadow.mapSize.width = 256;
 ghost3.shadow.mapSize.height = 256;
 ghost3.shadow.camera.far = 10
+
+
+/*
+* Sky
+* */
+
+const sky = new Sky()
+// sky.scale.set(100, 100, 100)
+sky.scale.setScalar(100) // same as above just faster
+scene.add(sky)
+
+sky.material.uniforms['turbidity'].value = 10
+sky.material.uniforms['rayleigh'].value = 3
+sky.material.uniforms['mieCoefficient'].value = 0.1
+sky.material.uniforms['mieDirectionalG'].value = 0.95
+sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95)
+
+/*
+* Fog
+* */
+
+// scene.fog = new three.Fog('#ff0000', 10, 13); // This kind of fog depends on the camera. In this case it starts 10 units away from camera and lasts until 13
+scene.fog = new three.FogExp2('#04343f', 0.1); // this is more like a real fog - we adjust the density and it increases the further away from camera we go
 
 /**
  * Animate
